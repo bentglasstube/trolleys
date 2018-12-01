@@ -10,6 +10,7 @@
 
 #include "map.h"
 #include "train.h"
+#include "person.h"
 
 class GameScreen : public Screen {
   public:
@@ -30,7 +31,9 @@ class GameScreen : public Screen {
     int active_switch_ = 0;
 
     std::vector<Train> trains_;
+    std::vector<Person> people_;
 
     void spawn_train();
+    void spawn_person();
 };
 

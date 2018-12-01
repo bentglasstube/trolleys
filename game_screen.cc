@@ -18,8 +18,17 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     spawn_train();
   }
 
+  if (input.key_held(Input::Button::Start)) {
+    spawn_person();
+  }
+
   for (auto& t : trains_) {
     t.update(map_, elapsed);
+    // TODO remove defunct trains
+  }
+
+  for (auto& p : people_) {
+    p.update(elapsed);
     // TODO remove defunct trains
   }
 
@@ -32,9 +41,8 @@ void GameScreen::draw(Graphics& graphics) const {
   const auto& active = map_.get_switch(active_switch_);
   tracks_.draw(graphics, 5, active.x(), active.y());
 
-  for (const auto& t : trains_) {
-    t.draw(graphics);
-  }
+  for (const auto& p : people_) p.draw(graphics);
+  for (const auto& t : trains_) t.draw(graphics);
 }
 
 Screen* GameScreen::next_screen() const {
@@ -43,4 +51,8 @@ Screen* GameScreen::next_screen() const {
 
 void GameScreen::spawn_train() {
   trains_.emplace_back(map_.random_track());
+}
+
+void GameScreen::spawn_person() {
+  people_.emplace_back();
 }

@@ -67,6 +67,7 @@ cc_library(
         "@libgam//:text",
         ":map",
         ":train",
+        ":person",
     ],
 )
 
@@ -113,5 +114,21 @@ cc_library(
         "@libgam//:spritemap",
         "@libgam//:util",
         ":map",
+    ],
+);
+
+cc_library(
+    name = "person",
+    srcs = [
+        "person.cc",
+    ],
+    hdrs = [
+        "person.h",
+    ],
+    deps = [
+        "@libgam//:graphics",
+        "@libgam//:spritemap",
+        "@libgam//:util",
+        ":train",
     ],
 );
