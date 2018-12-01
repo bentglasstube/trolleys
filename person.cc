@@ -26,7 +26,14 @@ Person::Person() : sprites_("objects.png", 8, 16, 16) {
     speed_ = -speed_dist(rand);
   }
 
-  type_ = 0;
+  std::uniform_int_distribution<int> type_dist(0, 64);
+  const int t = type_dist(rand);
+
+  if (t < 48) type_ = 0;
+  else if (t < 56) type_ = 1;
+  else if (t < 60) type_ = 2;
+  else type_ = 3;
+
   timer_ = 0;
 }
 
@@ -37,5 +44,5 @@ void Person::update(unsigned int elapsed) {
 
 void Person::draw(Graphics& graphics) const {
   const int frame = (timer_ / 100) % 3;
-  sprites_.draw(graphics, 4 + frame, x_, y_);
+  sprites_.draw(graphics, 4 + frame + 8 * type_, x_, y_);
 }
