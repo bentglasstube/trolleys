@@ -1,0 +1,4 @@
+bazel-*
+ld42-*.zip
+ld42-*.tgz
+*.app
