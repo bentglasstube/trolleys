@@ -3,6 +3,9 @@
 GameScreen::GameScreen() : text_("text.png"), tracks_("tracks.png", 6, 16, 16), map_("level.txt") {}
 
 bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+  // handle too big time steps
+  if (elapsed > 25) elapsed = 25;
+
   const int count = map_.switch_count();
   if (input.key_pressed(Input::Button::Down)) {
     active_switch_ = (active_switch_ + 1) % count;
@@ -38,6 +41,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 void GameScreen::draw(Graphics& graphics) const {
   map_.draw(graphics);
 
+  // TODO move selector to ui spritemap
   const auto& active = map_.get_switch(active_switch_);
   tracks_.draw(graphics, 5, active.x(), active.y());
 

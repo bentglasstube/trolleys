@@ -51,8 +51,6 @@ Train::TrainCar::TrainCar(double x, double y, int type) : x(x), y(y), dir(Direct
 void Train::TrainCar::update(const Map& map, unsigned int elapsed, double speed) {
   const double nx = x + speed * elapsed;
 
-  // TODO check map for switch
-
   auto r = map.check_switch(x, nx, y);
   if (r.dir == Map::SwitchResult::Direction::DivertUp) {
     dir = Train::Direction::Upward;
