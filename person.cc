@@ -16,12 +16,14 @@ Person::Person() : sprites_("objects.png", 8, 16, 16) {
 
   x_ = 204 + xjitter_dist(rand);
 
+  std::uniform_real_distribution<double> speed_dist(0.007, 0.025);
+
   if (pos == 0) {
     y_ = -8 - yjitter_dist(rand);
-    speed_ = 0.02;
+    speed_ = speed_dist(rand);
   } else {
     y_ = 248 + yjitter_dist(rand);
-    speed_ = -0.02;
+    speed_ = -speed_dist(rand);
   }
 
   type_ = 0;
