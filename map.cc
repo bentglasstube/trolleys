@@ -8,6 +8,12 @@
 #include "util.h"
 
 Map::Map(const std::string& file) : tracks_("tracks.png", 6, 16, 16) {
+  load(file);
+}
+
+void Map::load(const std::string& file) {
+  switches_.clear();
+
   std::ifstream f("content/" + file);
   if (f.is_open()) {
     std::string line;

@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <cmath>
 
-GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level.txt"), state_(State::Playing) {
+GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level1.txt"), state_(State::Playing) {
   rand_.seed(Util::random_seed());
+  reload();
 }
 
 bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
@@ -73,7 +74,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
           p.kill();
           add_blood_spray(p.x() + 7, p.y() + 8, 200);
           audio.play_sample("hit.wav");
-          ++deaths_;
+          ++current_deaths_;
         }
       }
     }
@@ -94,6 +95,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
         trains_.end());
 
     if (stage_timer_ == 0  && trains_.empty()) {
+      total_deaths_ += current_deaths_;
       state_ = State::Clear;
     }
 
@@ -103,7 +105,10 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       audio.play_sample("pause.wav");
     }
   } else if (state_ == State::Clear) {
-    if (input.key_pressed(Input::Button::Start)) return false;
+    if (input.key_pressed(Input::Button::Start)) {
+      ++level_;
+      reload();
+    }
   }
 
   return true;
@@ -117,7 +122,7 @@ void GameScreen::draw(Graphics& graphics) const {
   ui_.draw(graphics, 0, active.x(), active.y());
 
   ui_.draw(graphics, 2, 0, 0);
-  text_.draw(graphics, std::to_string(deaths_), 16, 0);
+  text_.draw(graphics, std::to_string(current_deaths_), 16, 0);
 
   text_.draw(graphics, time_left_string(), 256, 0, Text::Alignment::Right);
 
@@ -136,15 +141,15 @@ void GameScreen::draw(Graphics& graphics) const {
     text_.draw(graphics, "P A U S E D", 128, 112, Text::Alignment::Center);
 
   } else if (state_ == State::Clear) {
-
     const Box b(12, 7);
     b.draw(graphics, ui_);
     text_.draw(graphics, "Stage Clear", 128, 72, Text::Alignment::Center);
 
     text_.draw(graphics, "Killed Today: ", 48, 104);
-    text_.draw(graphics, std::to_string(deaths_), 208, 104, Text::Alignment::Right);
+    text_.draw(graphics, std::to_string(current_deaths_), 208, 104, Text::Alignment::Right);
 
     text_.draw(graphics, "Total Deaths: ", 48, 120);
+    text_.draw(graphics, std::to_string(total_deaths_), 208, 120, Text::Alignment::Right);
 
     text_.draw(graphics, "Press Start", 128, 152, Text::Alignment::Center);
   }
@@ -152,6 +157,22 @@ void GameScreen::draw(Graphics& graphics) const {
 
 Screen* GameScreen::next_screen() const {
   return nullptr;
+}
+
+void GameScreen::reload() {
+  map_.load("level" + std::to_string(level_) + ".txt");
+
+  trains_.clear();
+  people_.clear();
+  particles_.clear();
+
+  active_switch_ = 0;
+  train_timer_ = 5000;
+  person_timer_ = 500;
+  stage_timer_ = level_ * 30000;
+
+  state_ = State::Playing;
+  current_deaths_ = 0;
 }
 
 void GameScreen::spawn_train(Audio& audio) {

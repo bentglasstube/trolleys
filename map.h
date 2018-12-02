@@ -20,6 +20,7 @@ class Map {
 
     Map(const std::string& file);
 
+    void load(const std::string& file);
     void toggle_switch(size_t  n);
 
     void draw(Graphics& graphics) const;

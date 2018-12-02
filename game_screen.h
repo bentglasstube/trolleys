@@ -47,13 +47,18 @@ class GameScreen : public Screen {
     int person_timer_ = 500;
     int stage_timer_ = 120000;
 
-    int deaths_ = 0;
+    int current_deaths_ = 0;
+    int total_deaths_ = 0;
+
+    int level_ = 1;
 
     std::vector<Train> trains_;
     std::vector<Person> people_;
     std::vector<Particle> particles_;
 
     std::mt19937 rand_;
+
+    void reload();
 
     void spawn_train(Audio& audio);
     void spawn_people(int count);
