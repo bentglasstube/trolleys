@@ -1,19 +1,16 @@
 #pragma once
 
-#include <vector>
-
 #include "backdrop.h"
-#include "graphics.h"
 #include "input.h"
 #include "screen.h"
 #include "text.h"
 
 #include "game_state.h"
 
-class TitleScreen : public Screen {
+class AchievementScreen : public Screen {
   public:
 
-    TitleScreen(GameState state);
+    AchievementScreen(GameState state);
 
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
@@ -22,15 +19,12 @@ class TitleScreen : public Screen {
 
   private:
 
-    const std::vector<std::string> kChoices = {
-      "Play Game",
-      "Achievements",
-      "Quit",
-    };
+    static constexpr int kAchievements = 5;
 
     GameState gs_;
     Text text_;
     Backdrop backdrop_;
+    int select_;
 
-    int choice_;
+    void draw_achievement(Graphics& graphics, GameState::Achievement a, int x, int y) const;
 };

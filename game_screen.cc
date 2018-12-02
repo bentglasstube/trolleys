@@ -127,11 +127,11 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       audio.play_sample("pause.wav");
     }
   } else if (state_ == State::Clear) {
+    if (current_deaths_ == 0) gs_.achieve(GameState::Achievement::Deathless);
+    if (dog_killed_ == false) gs_.achieve(GameState::Achievement::Dogless);
+
     if (input.key_pressed(Input::Button::Start)) {
       ++level_;
-
-      if (current_deaths_ == 0) gs_.achieve(GameState::Achievement::Deathless);
-      if (dog_killed_ == false) gs_.achieve(GameState::Achievement::Dogless);
 
       if (level_ > kMaxLevel) {
         audio.stop_music();

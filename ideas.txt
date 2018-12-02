@@ -9,4 +9,12 @@
 [ ] stats on what is killed
 [ ] multiple sidewalks
 [ ] bullet trains
-[ ] achievements
+
+[x] achievements
+
+  0 deaths in a day
+  no dogs killed in a day
+  split a train
+  rejoin a train?
+  split a train 3 ways
+

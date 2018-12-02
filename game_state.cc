@@ -10,6 +10,11 @@ void GameState::show(Achievement a) {
   if (status_[a] == Status::Gotten) status_[a] = Status::Shown;
 }
 
+bool GameState::known(Achievement a) const {
+  const auto i = status_.find(a);
+  return i != status_.end() && (*i).second != Status::None;
+}
+
 GameState::Achievement GameState::alert_needed() const {
   for (const auto& s : status_) {
     if (s.second == Status::Gotten) return s.first;
@@ -31,12 +36,14 @@ std::string GameState::Name(Achievement a) {
 
 std::string GameState::Description(Achievement a) {
   switch (a) {
-    case Achievement::Nothing:   return "I don't know how\nyou found this.";
-    case Achievement::Deathless: return "You managed not to hit\nanyone!  Did you cheat?";
-    case Achievement::Dogless:   return "You saved all the dogs in\na day, but at what cost?";
-    case Achievement::Split:     return "Whoops, the train cars are\nsupposed to stay together.";
-    case Achievement::Rejoin:    return "Runaway train crisis averted.";
+                                       //                        //                        //
+    case Achievement::Nothing:   return "I don't know how\n"       "you found this.";
+    case Achievement::Deathless: return "You managed not to hit\n" "anyone!  Did you cheat?";
+    case Achievement::Dogless:   return "You saved all the dogs!\n""But at what cost?";
+    case Achievement::Split:     return "Why choose one track\n"   "when you can have both?";
+    case Achievement::Rejoin:    return "Maybe splitting up the\n" "train was a bad idea.";
     case Achievement::ThreeWay:  return "It's almost like you are\ntrying to hit people...";
+                                       //                        //                        //
     default: return "";
   }
 }

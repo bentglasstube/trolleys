@@ -1,19 +1,37 @@
 #include "title_screen.h"
 
+#include "achievement_screen.h"
 #include "game_screen.h"
 
-TitleScreen::TitleScreen(GameState state) : gs_(state), text_("text.png"), backdrop_("title.png") {}
+TitleScreen::TitleScreen(GameState state) : gs_(state), text_("text.png"), backdrop_("title.png"), choice_(0) {}
 
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int) {
   if (!audio.music_playing()) audio.play_music("dour.ogg");
-  return !input.any_pressed();
+
+  if (input.key_pressed(Input::Button::Up)) --choice_;
+  if (input.key_pressed(Input::Button::Down)) ++choice_;
+
+  choice_ = (choice_ + kChoices.size()) % kChoices.size();
+
+  if (input.key_pressed(Input::Button::A)) return false;
+  if (input.key_pressed(Input::Button::Start)) return false;
+
+  return true;
 }
 
 void TitleScreen::draw(Graphics& graphics) const {
   backdrop_.draw(graphics);
-  text_.draw(graphics, "Press Any Key", 128, 208, Text::Alignment::Center);
+
+  for (size_t i = 0; i < kChoices.size(); ++i) {
+    text_.draw(graphics, kChoices[i], 144, 168 + 16 * i);
+  }
+  text_.draw(graphics, ">", 128, 168 + 16 * choice_);
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new GameScreen(gs_);
+  switch (choice_) {
+    case 0: return new GameScreen(gs_);
+    case 1: return new AchievementScreen(gs_);
+    default: return nullptr;
+  }
 }

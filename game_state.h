@@ -18,6 +18,7 @@ class GameState {
 
     void achieve(Achievement a);
     void show(Achievement a);
+    bool known(Achievement a) const;
     Achievement alert_needed() const;
 
     static std::string Name(Achievement a);
