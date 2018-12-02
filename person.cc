@@ -4,7 +4,7 @@
 
 #include "util.h"
 
-Person::Person() : sprites_("objects.png", 8, 16, 16) {
+Person::Person() : sprites_("objects.png", 3, 16, 16) {
   std::mt19937 rand;
   rand.seed(Util::random_seed());
 
@@ -51,7 +51,7 @@ void Person::kill() {
 void Person::draw(Graphics& graphics) const {
   if (dead_) return;
   const int frame = (timer_ / 100) % 3;
-  sprites_.draw(graphics, 4 + frame + 8 * type_, x_, y_);
+  sprites_.draw(graphics, 3 + frame + 3 * type_, x_, y_);
 }
 
 bool Person::collide(double x1, double x2, double y1, double y2) const {

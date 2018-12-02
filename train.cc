@@ -4,7 +4,7 @@
 
 #include "util.h"
 
-Train::Train(int y) : sprites_("objects.png", 8, 16, 16) {
+Train::Train(int y) : sprites_("objects.png", 3, 16, 16) {
   std::mt19937 rand;
   rand.seed(Util::random_seed());
 
@@ -17,24 +17,19 @@ Train::Train(int y) : sprites_("objects.png", 8, 16, 16) {
     cars_.emplace_back(-kLeftOffset - i * 16, y, car_type(rand));
   }
 
-  timer_ = 0;
   // TODO randomize speed
   speed_ = 0.1;
 }
 
 void Train::update(const Map& map, unsigned int elapsed) {
-  timer_ += elapsed;
   for (auto& c : cars_) {
     c.update(map, elapsed, speed_);
   }
 }
 
 void Train::draw(Graphics& graphics) const {
-  const int frame = (timer_ / 250) % 3;
-
   for (const auto& c : cars_) {
-    const int n = 8 * c.type + frame;
-    sprites_.draw(graphics, n, c.x - 16, c.y);
+    sprites_.draw(graphics, c.type, c.x - 16, c.y);
 
 #ifndef NDEBUG
     if (c.dir != Train::Direction::Forward) {

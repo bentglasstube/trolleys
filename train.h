@@ -46,7 +46,6 @@ class Train {
     SpriteMap sprites_;
 
     std::vector<TrainCar> cars_;
-    int timer_;
     double speed_;
 
 };
