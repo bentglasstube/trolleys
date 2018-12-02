@@ -1,6 +1,6 @@
 [x] sound effects
 [ ] music
-[ ] multiple levels
+[x] multiple levels
 [ ] weather effects
 [ ] danny devito "that shit was terrible"
 [ ] have people wait if a train is passing

@@ -3,8 +3,6 @@
 #include <random>
 #include <vector>
 
-#include "graphics.h"
-#include "input.h"
 #include "particle.h"
 #include "screen.h"
 #include "spritemap.h"
@@ -26,6 +24,8 @@ class GameScreen : public Screen {
     Screen* next_screen() const override;
 
   private:
+
+    static constexpr int kMaxLevel = 5;
 
     enum class State { Playing, Paused, Clear };
 

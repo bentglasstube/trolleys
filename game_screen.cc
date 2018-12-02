@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "game_over_screen.h"
+
 GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level1.txt"), state_(State::Playing) {
   rand_.seed(Util::random_seed());
   reload();
@@ -107,6 +109,11 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   } else if (state_ == State::Clear) {
     if (input.key_pressed(Input::Button::Start)) {
       ++level_;
+
+      if (level_ > kMaxLevel) {
+        return false;
+      }
+
       reload();
     }
   }
@@ -156,7 +163,7 @@ void GameScreen::draw(Graphics& graphics) const {
 }
 
 Screen* GameScreen::next_screen() const {
-  return nullptr;
+  return new GameOverScreen(total_deaths_);
 }
 
 void GameScreen::reload() {
