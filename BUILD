@@ -61,6 +61,7 @@ cc_library(
     ],
     deps = [
         "@libgam//:backdrop",
+        "@libgam//:particle",
         "@libgam//:screen",
         "@libgam//:sprite",
         "@libgam//:spritemap",

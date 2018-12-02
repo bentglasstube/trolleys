@@ -2,4 +2,4 @@
 [ ] music
 [ ] weather effects
 [ ] danny devito "that shit was terrible"
-[ ] make frogger instead :P
+[ ] have people wait if a train is passing

@@ -5,6 +5,7 @@
 
 #include "graphics.h"
 #include "input.h"
+#include "particle.h"
 #include "screen.h"
 #include "spritemap.h"
 #include "text.h"
@@ -36,10 +37,14 @@ class GameScreen : public Screen {
 
     std::vector<Train> trains_;
     std::vector<Person> people_;
+    std::vector<Particle> particles_;
 
     std::mt19937 rand_;
 
     void spawn_train();
     void spawn_people(int count);
+
+    void add_blood_spray(double x, double y, int n);
+    void add_smoke(double x, double y, int n);
 };
 
