@@ -40,6 +40,6 @@ class GameScreen : public Screen {
     std::mt19937 rand_;
 
     void spawn_train();
-    void spawn_person();
+    void spawn_people(int count);
 };
 

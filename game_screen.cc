@@ -28,6 +28,15 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     train_timer_ += train_dist(rand_);
   }
 
+  person_timer_ -= elapsed;
+  if (person_timer_ < 0) {
+    std::uniform_int_distribution<int> people_count_dist(5, 20);
+    spawn_people(people_count_dist(rand_));
+
+    std::uniform_int_distribution<int> people_timer_dist(3000, 6000);
+    person_timer_ += people_timer_dist(rand_);
+  }
+
   for (auto& p : people_) p.update(elapsed);
 
   for (auto& t : trains_) {
@@ -79,6 +88,6 @@ void GameScreen::spawn_train() {
   trains_.emplace_back(map_.random_track());
 }
 
-void GameScreen::spawn_person() {
-  people_.emplace_back();
+void GameScreen::spawn_people(int count) {
+  for (int i = 0; i < count; ++i) people_.emplace_back();
 }
