@@ -29,7 +29,7 @@ class Map {
     int random_track() const;
 
     SwitchResult check_switch(int x1, int x2, int y) const;
-    bool check_joiner(int x, int y) const;
+    int tile_at(int x, int y) const;
 
   private:
 

@@ -92,7 +92,6 @@ Map::SwitchResult Map::check_switch(int x1, int x2, int y) const {
   return { SwitchResult::Direction::None, 0 };
 }
 
-bool Map::check_joiner(int x, int y) const {
-  const int t = tiles_[y / 16][x / 16];
-  return t == 8 || t == 14;
+int Map::tile_at(int x, int y) const {
+  return  tiles_[y / 16][x / 16];
 }

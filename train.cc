@@ -81,7 +81,9 @@ void Train::TrainCar::update(const Map& map, unsigned int elapsed, double speed)
     const double ny = (dir == Train::Direction::Upward) ? divy - dy : divy + dy;
 
     const auto tc = tile_coords();
-    if (map.check_joiner(tc.first, tc.second)) {
+    const int t = map.tile_at(tc.first, tc.second);
+
+    if ((dir == Train::Direction::Upward && t == 14) || (dir == Train::Direction::Downward && t == 8)) {
       dir = Train::Direction::Forward;
       y = (int)((ny + 8) / 16) * 16;
     } else {
