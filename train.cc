@@ -46,6 +46,17 @@ void Train::draw(Graphics& graphics) const {
   }
 }
 
+bool Train::hit(const Person& person) const {
+  for (const auto& c : cars_) {
+    if (c.hit(person)) return true;
+  }
+  return false;
+}
+
+bool Train::gone() const {
+  return cars_[0].x > 320 + 16 * kMaxCars;
+}
+
 Train::TrainCar::TrainCar(double x, double y, int type) : x(x), y(y), dir(Direction::Forward), type(type) {}
 
 void Train::TrainCar::update(const Map& map, unsigned int elapsed, double speed) {
@@ -85,6 +96,10 @@ double Train::TrainCar::diversion_offset() const {
   if (dx < 17) return 2;
   if (dx < 20) return 3;
   return (dx - 20) / 2.0 + 3;
+}
+
+bool Train::TrainCar::hit(const Person& person) const {
+  return person.collide(x - 14, x - 2, y + 5, y + 11);
 }
 
 std::pair<int, int> Train::TrainCar::tile_coords() const {

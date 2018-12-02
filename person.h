@@ -3,17 +3,17 @@
 #include "graphics.h"
 #include "spritemap.h"
 
-#include "train.h"
-
 class Person {
   public:
 
     Person();
 
     void update(unsigned int elapsed);
-    void draw(Graphics& graphics) const;
+    void kill();
 
-    bool hit(const Train& train) const;
+    void draw(Graphics& graphics) const;
+    bool collide(double x1, double x2, double y1, double y2) const;
+    bool gone() const;
 
   private:
 
@@ -21,4 +21,5 @@ class Person {
 
     double x_, y_, speed_;
     int type_, timer_;
+    bool dead_;
 };

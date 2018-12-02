@@ -35,14 +35,34 @@ Person::Person() : sprites_("objects.png", 8, 16, 16) {
   else type_ = 3;
 
   timer_ = 0;
+  dead_ = false;
 }
 
 void Person::update(unsigned int elapsed) {
+  if (dead_) return;
   timer_ += elapsed;
   y_ += elapsed * speed_;
 }
 
+void Person::kill() {
+  dead_ = true;
+}
+
 void Person::draw(Graphics& graphics) const {
+  if (dead_) return;
   const int frame = (timer_ / 100) % 3;
   sprites_.draw(graphics, 4 + frame + 8 * type_, x_, y_);
+}
+
+bool Person::collide(double x1, double x2, double y1, double y2) const {
+  const double px1 = x_ + 5;
+  const double px2 = px1 + 5;
+  const double py1 = y_ + 9;
+  const double py2 = py1 + 5;
+
+  return x1 < px2 && x2 > px1 && y1 < py2 && y2 > py1;
+}
+
+bool Person::gone() const {
+  return dead_ || y_ < -100 || y_ > 340;
 }

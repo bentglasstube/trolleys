@@ -114,6 +114,7 @@ cc_library(
         "@libgam//:spritemap",
         "@libgam//:util",
         ":map",
+        ":person"
     ],
 );
 
@@ -129,6 +130,5 @@ cc_library(
         "@libgam//:graphics",
         "@libgam//:spritemap",
         "@libgam//:util",
-        ":train",
     ],
 );

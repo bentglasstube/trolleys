@@ -1,5 +1,7 @@
 #include "game_screen.h"
 
+#include <algorithm>
+
 GameScreen::GameScreen() : text_("text.png"), tracks_("tracks.png", 6, 16, 16), map_("level.txt") {}
 
 bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
@@ -25,15 +27,28 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     spawn_person();
   }
 
+  for (auto& p : people_) p.update(elapsed);
+
   for (auto& t : trains_) {
     t.update(map_, elapsed);
-    // TODO remove defunct trains
+
+    for (auto& p : people_) {
+      if (t.hit(p)) {
+        p.kill();
+        // TODO death animation, score, etc
+      }
+    }
   }
 
-  for (auto& p : people_) {
-    p.update(elapsed);
-    // TODO remove defunct trains
-  }
+  people_.erase(std::remove_if(
+        people_.begin(), people_.end(),
+        [](const Person& p){ return p.gone(); }),
+      people_.end());
+
+  trains_.erase(std::remove_if(
+        trains_.begin(), trains_.end(),
+        [](const Train& t){ return t.gone(); }),
+      trains_.end());
 
   return true;
 }

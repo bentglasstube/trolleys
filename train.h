@@ -6,6 +6,7 @@
 #include "spritemap.h"
 
 #include "map.h"
+#include "person.h"
 
 class Train {
   public:
@@ -15,6 +16,8 @@ class Train {
     void update(const Map& map, unsigned int elapsed);
 
     void draw(Graphics& graphics) const;
+    bool hit(const Person& person) const;
+    bool gone() const;
 
   private:
 
@@ -32,6 +35,7 @@ class Train {
 
       void update(const Map& map, unsigned int elapsed, double speed);
       double diversion_offset() const;
+      bool hit(const Person& person) const;
 
       std::pair<int, int> tile_coords() const;
     };
