@@ -50,6 +50,11 @@ pkg_tar(
 )
 
 cc_library(
+    name = "game_state",
+    hdrs = ["game_state.h"],
+)
+
+cc_library(
     name = "screens",
     srcs = [
         "game_over_screen.cc",
@@ -68,6 +73,7 @@ cc_library(
         "@libgam//:sprite",
         "@libgam//:spritemap",
         "@libgam//:text",
+        ":game_state",
         ":map",
         ":train",
         ":person",
@@ -116,6 +122,7 @@ cc_library(
         "@libgam//:graphics",
         "@libgam//:spritemap",
         "@libgam//:util",
+        ":game_state",
         ":map",
         ":person"
     ],

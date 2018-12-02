@@ -1,6 +1,8 @@
 #include "train.h"
 
+#include <cmath>
 #include <random>
+#include <unordered_set>
 
 #include "util.h"
 
@@ -21,9 +23,43 @@ Train::Train(int y) : sprites_("objects.png", 3, 16, 16) {
   speed_ = 0.1;
 }
 
-void Train::update(const Map& map, unsigned int elapsed) {
+void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
   for (auto& c : cars_) {
     c.update(map, elapsed, speed_);
+  }
+
+  if (!split_ && cars_.size() > 1) {
+    for (size_t i = 1; i < cars_.size(); ++i) {
+      const double dy = cars_[i - 1].y - cars_[i].y;
+      if (std::abs(dy) > 16) {
+        gs.split |= 1;
+        split_ = true;
+        fprintf(stderr, "Split at %u: %f %f\n", i, cars_[i - 1].y, cars_[i].y);
+        break;
+      }
+    }
+  }
+
+  if (split_) {
+    if (gone()) {
+      std::unordered_set<int> ys;
+      for (const auto& c : cars_) {
+        ys.insert((int)c.y);
+      }
+
+      if (ys.size() > 2) {
+        fprintf(stderr, "THREE WAY!\n");
+        gs.three_way |= 1;
+      }
+    }
+
+    const int ey = (int)cars_[0].y;
+    for (size_t  i = 1; i < cars_.size(); ++i) {
+      if (ey != (int)cars_[i].y) return;
+    }
+    gs.rejoin |= 1;
+    split_ = false;
+    fprintf(stderr, "Rejoin!\n");
   }
 }
 
@@ -49,7 +85,7 @@ bool Train::hit(const Person& person) const {
 }
 
 bool Train::gone() const {
-  return cars_[0].x > 320 + 16 * kMaxCars;
+  return cars_[0].x > 256+ 16 * kMaxCars;
 }
 
 double Train::x() const {

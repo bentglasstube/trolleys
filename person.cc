@@ -74,3 +74,7 @@ double Person::x() const {
 double Person::y() const {
   return y_;
 }
+
+bool Person::is_dog() const {
+  return type_ == 1;
+}

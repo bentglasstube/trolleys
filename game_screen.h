@@ -9,14 +9,15 @@
 #include "text.h"
 #include "util.h"
 
+#include "game_state.h"
 #include "map.h"
-#include "train.h"
 #include "person.h"
+#include "train.h"
 
 class GameScreen : public Screen {
   public:
 
-    GameScreen();
+    GameScreen(GameState state);
 
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
@@ -36,6 +37,7 @@ class GameScreen : public Screen {
       void draw(Graphics& graphics, const SpriteMap& ui) const;
     };
 
+    GameState gs_;
     Text text_;
     SpriteMap ui_;
     Map map_;
@@ -49,6 +51,8 @@ class GameScreen : public Screen {
 
     int current_deaths_ = 0;
     int total_deaths_ = 0;
+
+    bool dog_killed_ = false;
 
     int level_ = 1;
 

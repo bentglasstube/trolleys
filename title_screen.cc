@@ -2,7 +2,7 @@
 
 #include "game_screen.h"
 
-TitleScreen::TitleScreen() : text_("text.png"), backdrop_("title.png") {}
+TitleScreen::TitleScreen(GameState state) : gs_(state), text_("text.png"), backdrop_("title.png") {}
 
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int) {
   if (!audio.music_playing()) audio.play_music("dour.ogg");
@@ -15,5 +15,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return new GameScreen();
+  return new GameScreen(gs_);
 }

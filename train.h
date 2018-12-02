@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include "spritemap.h"
 
+#include "game_state.h"
 #include "map.h"
 #include "person.h"
 
@@ -13,7 +14,7 @@ class Train {
 
     Train(int y);
 
-    void update(const Map& map, unsigned int elapsed);
+    void update(const Map& map, unsigned int elapsed, GameState& gs);
 
     void draw(Graphics& graphics) const;
     bool hit(const Person& person) const;
@@ -47,6 +48,7 @@ class Train {
 
     std::vector<TrainCar> cars_;
     double speed_;
+    bool split_ = false;
 
 };
 

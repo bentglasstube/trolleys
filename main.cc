@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include "game_state.h"
 #include "title_screen.h"
 
 int main(int, char**) {
@@ -11,7 +12,7 @@ int main(int, char**) {
   config.graphics.fullscreen = true;
 
   Game game(config);
-  game.loop(new TitleScreen());
+  game.loop(new TitleScreen((GameState){}));
 
   return 0;
 }

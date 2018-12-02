@@ -16,6 +16,7 @@ class Person {
     bool gone() const;
     double x() const;
     double y() const;
+    bool is_dog() const;
 
   private:
 

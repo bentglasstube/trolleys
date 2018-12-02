@@ -5,7 +5,7 @@
 
 #include "game_over_screen.h"
 
-GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level1.txt"), state_(State::Playing) {
+GameScreen::GameScreen(GameState state) : gs_(state), text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level1.txt"), state_(State::Playing) {
   rand_.seed(Util::random_seed());
   reload();
 }
@@ -69,7 +69,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     for (auto& p : people_) p.update(elapsed);
 
     for (auto& t : trains_) {
-      t.update(map_, elapsed);
+      t.update(map_, elapsed, gs_);
 
       add_smoke(t.x() - 6.5, t.y() + 2, 10);
 
@@ -79,6 +79,8 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
           add_blood_spray(p.x() + 7, p.y() + 8, 200);
           audio.play_sample("hit.wav");
           ++current_deaths_;
+
+          if (p.is_dog()) dog_killed_ = true;
         }
       }
     }
@@ -112,6 +114,9 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     if (input.key_pressed(Input::Button::Start)) {
       ++level_;
 
+      if (current_deaths_ == 0) gs_.deathless |= 1;
+      if (dog_killed_ == false) gs_.dogless |= 1;
+
       if (level_ > kMaxLevel) {
         audio.stop_music();
         return false;
@@ -133,8 +138,8 @@ void GameScreen::draw(Graphics& graphics) const {
 
   ui_.draw(graphics, 2, 0, 0);
   text_.draw(graphics, std::to_string(current_deaths_), 16, 0);
-
   text_.draw(graphics, time_left_string(), 256, 0, Text::Alignment::Right);
+  text_.draw(graphics, "Day " + std::to_string(level_), 128, 224, Text::Alignment::Center);
 
   for (const auto& p : people_) p.draw(graphics);
   for (const auto& t : trains_) {
@@ -151,6 +156,7 @@ void GameScreen::draw(Graphics& graphics) const {
     text_.draw(graphics, "P A U S E D", 128, 112, Text::Alignment::Center);
 
   } else if (state_ == State::Clear) {
+
     const Box b(12, 7);
     b.draw(graphics, ui_);
     text_.draw(graphics, "Stage Clear", 128, 72, Text::Alignment::Center);
@@ -162,11 +168,12 @@ void GameScreen::draw(Graphics& graphics) const {
     text_.draw(graphics, std::to_string(total_deaths_), 208, 120, Text::Alignment::Right);
 
     text_.draw(graphics, "Press Start", 128, 152, Text::Alignment::Center);
+
   }
 }
 
 Screen* GameScreen::next_screen() const {
-  return new GameOverScreen(total_deaths_);
+  return new GameOverScreen(gs_, total_deaths_);
 }
 
 void GameScreen::reload() {
@@ -183,6 +190,7 @@ void GameScreen::reload() {
 
   state_ = State::Playing;
   current_deaths_ = 0;
+  dog_killed_ = false;
 }
 
 void GameScreen::spawn_train(Audio& audio) {

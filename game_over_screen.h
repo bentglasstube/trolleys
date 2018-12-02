@@ -4,10 +4,12 @@
 #include "screen.h"
 #include "text.h"
 
+#include "game_state.h"
+
 class GameOverScreen : public Screen {
   public:
 
-    GameOverScreen(int death_toll);
+    GameOverScreen(GameState state, int death_toll);
 
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
@@ -18,6 +20,7 @@ class GameOverScreen : public Screen {
 
     static constexpr int kTextRate = 25;
 
+    GameState gs_;
     Text text_;
     Backdrop backdrop_;
 

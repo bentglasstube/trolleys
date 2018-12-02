@@ -2,7 +2,7 @@
 
 #include "title_screen.h"
 
-GameOverScreen::GameOverScreen(int death_toll) : text_("text.png"), backdrop_("gameover.png"), death_toll_(death_toll), timer_(0), letters_(0), stage_(1) {}
+GameOverScreen::GameOverScreen(GameState state, int death_toll) : gs_(state), text_("text.png"), backdrop_("gameover.png"), death_toll_(death_toll), timer_(0), letters_(0), stage_(1) {}
 
 bool GameOverScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   if (!audio.music_playing()) audio.play_music("gameover.ogg");
@@ -39,7 +39,7 @@ void GameOverScreen::draw(Graphics& graphics) const {
 }
 
 Screen* GameOverScreen::next_screen() const {
-  return new TitleScreen();
+  return new TitleScreen(gs_);
 }
 
 std::string GameOverScreen::current_text() const {
