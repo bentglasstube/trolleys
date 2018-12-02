@@ -16,7 +16,7 @@ class GameOverScreen : public Screen {
 
   private:
 
-    static constexpr int kTextRate = 50;
+    static constexpr int kTextRate = 25;
 
     Text text_;
     Backdrop backdrop_;

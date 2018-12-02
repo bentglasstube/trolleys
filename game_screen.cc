@@ -11,6 +11,8 @@ GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("le
 }
 
 bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+  if (!audio.music_playing()) audio.play_music("dour.ogg");
+
   // handle too big time steps
   if (elapsed > 25) elapsed = 25;
 
@@ -111,6 +113,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       ++level_;
 
       if (level_ > kMaxLevel) {
+        audio.stop_music();
         return false;
       }
 

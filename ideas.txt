@@ -1,10 +1,12 @@
 [x] sound effects
-[ ] music
+[x] music
 [x] multiple levels
+[x] danny devito "that shit was terrible"
+
 [ ] weather effects
-[ ] danny devito "that shit was terrible"
 [ ] have people wait if a train is passing
 [ ] trains slow down without engine attached
 [ ] stats on what is killed
 [ ] multiple sidewalks
 [ ] bullet trains
+[ ] achievements
