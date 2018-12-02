@@ -51,7 +51,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     for (auto& p : people_) {
       if (t.hit(p)) {
         p.kill();
-        add_blood_spray(t.x(), t.y() + 8, 200);
+        add_blood_spray(p.x() + 7, p.y() + 8, 200);
       }
     }
   }

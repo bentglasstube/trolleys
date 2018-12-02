@@ -66,3 +66,11 @@ bool Person::collide(double x1, double x2, double y1, double y2) const {
 bool Person::gone() const {
   return dead_ || y_ < -100 || y_ > 340;
 }
+
+double Person::x() const {
+  return x_;
+}
+
+double Person::y() const {
+  return y_;
+}

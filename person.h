@@ -14,6 +14,8 @@ class Person {
     void draw(Graphics& graphics) const;
     bool collide(double x1, double x2, double y1, double y2) const;
     bool gone() const;
+    double x() const;
+    double y() const;
 
   private:
 
