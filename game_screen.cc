@@ -16,6 +16,18 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   // handle too big time steps
   if (elapsed > 25) elapsed = 25;
 
+  // TODO check for achievements
+  const GameState::Achievement a = gs_.alert_needed();
+  if (a != GameState::Achievement::Nothing) {
+    alerts_.emplace_back(GameState::Name(a));
+    gs_.show(a);
+  }
+
+  if (!alerts_.empty()) {
+    alerts_[0].update(elapsed);
+    if (alerts_[0].timer > 3500) alerts_.erase(alerts_.begin());
+  }
+
   if (state_ == State::Playing) {
     stage_timer_ -= elapsed;
     if (stage_timer_ < 0) stage_timer_ = 0;
@@ -23,6 +35,10 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 #ifndef NDEBUG
     if (input.key_pressed(Input::Button::Select)) {
       stage_timer_ -= 10000;
+    }
+
+    if (input.key_pressed(Input::Button::B)) {
+      alerts_.emplace_back("Test Achievement: " + std::to_string(current_deaths_));
     }
 #endif
 
@@ -114,8 +130,8 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     if (input.key_pressed(Input::Button::Start)) {
       ++level_;
 
-      if (current_deaths_ == 0) gs_.deathless |= 1;
-      if (dog_killed_ == false) gs_.dogless |= 1;
+      if (current_deaths_ == 0) gs_.achieve(GameState::Achievement::Deathless);
+      if (dog_killed_ == false) gs_.achieve(GameState::Achievement::Dogless);
 
       if (level_ > kMaxLevel) {
         audio.stop_music();
@@ -170,6 +186,8 @@ void GameScreen::draw(Graphics& graphics) const {
     text_.draw(graphics, "Press Start", 128, 152, Text::Alignment::Center);
 
   }
+
+  if (!alerts_.empty()) alerts_[0].draw(graphics, ui_, text_);
 }
 
 Screen* GameScreen::next_screen() const {
@@ -255,4 +273,36 @@ void GameScreen::Box::draw(Graphics& graphics, const SpriteMap& ui) const {
   ui.draw(graphics, 5, ex, sy);
   ui.draw(graphics, 9, sx, ey);
   ui.draw(graphics, 11, ex, ey);
+}
+
+GameScreen::Achievement::Achievement(const std::string& text) : text(text), width(8 * text.length() + 32), timer(0) {}
+
+void GameScreen::Achievement::update(unsigned int elapsed) {
+  timer += elapsed;
+}
+
+void GameScreen::Achievement::draw(Graphics& graphics, const SpriteMap& ui, const Text& t) const {
+  const int sx = 128 - width / 2;
+
+  int y = 0;
+  if (timer < 500) {
+    y = 240 - (32 * timer / 500);
+  } else if (timer < 2500) {
+    y = 208;
+  } else {
+    y = 240 - (32 * (3000 - timer) / 500);
+  }
+
+  ui.draw(graphics, 12, sx, y);
+  ui.draw(graphics, 15, sx, y + 16);
+
+  for (int x = sx + 16; x < sx + width - 16; x += 16) {
+    ui.draw(graphics, 13, x, y);
+    ui.draw(graphics, 16, x, y + 16);
+  }
+
+  ui.draw(graphics, 14, sx + width - 16, y);
+  ui.draw(graphics, 17, sx + width - 16, y + 16);
+
+  t.draw(graphics, text, sx + 24, y + 8);
 }

@@ -32,9 +32,8 @@ void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
     for (size_t i = 1; i < cars_.size(); ++i) {
       const double dy = cars_[i - 1].y - cars_[i].y;
       if (std::abs(dy) > 16) {
-        gs.split |= 1;
+        gs.achieve(GameState::Achievement::Split);
         split_ = true;
-        fprintf(stderr, "Split at %u: %f %f\n", i, cars_[i - 1].y, cars_[i].y);
         break;
       }
     }
@@ -47,19 +46,15 @@ void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
         ys.insert((int)c.y);
       }
 
-      if (ys.size() > 2) {
-        fprintf(stderr, "THREE WAY!\n");
-        gs.three_way |= 1;
-      }
+      if (ys.size() > 2) gs.achieve(GameState::Achievement::ThreeWay);
     }
 
     const int ey = (int)cars_[0].y;
     for (size_t  i = 1; i < cars_.size(); ++i) {
       if (ey != (int)cars_[i].y) return;
     }
-    gs.rejoin |= 1;
+    gs.achieve(GameState::Achievement::Rejoin);
     split_ = false;
-    fprintf(stderr, "Rejoin!\n");
   }
 }
 

@@ -52,6 +52,7 @@ pkg_tar(
 cc_library(
     name = "game_state",
     hdrs = ["game_state.h"],
+    srcs = ["game_state.cc"],
 )
 
 cc_library(

@@ -37,6 +37,14 @@ class GameScreen : public Screen {
       void draw(Graphics& graphics, const SpriteMap& ui) const;
     };
 
+    struct Achievement {
+      Achievement(const std::string& text);
+      std::string text;
+      int width, timer;
+      void update(unsigned int elapsed);
+      void draw(Graphics& graphics, const SpriteMap& ui, const Text& t) const;
+    };
+
     GameState gs_;
     Text text_;
     SpriteMap ui_;
@@ -59,6 +67,7 @@ class GameScreen : public Screen {
     std::vector<Train> trains_;
     std::vector<Person> people_;
     std::vector<Particle> particles_;
+    std::vector<Achievement> alerts_;
 
     std::mt19937 rand_;
 
