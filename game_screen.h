@@ -34,6 +34,9 @@ class GameScreen : public Screen {
     int active_switch_ = 0;
     int train_timer_ = 5000;
     int person_timer_ = 500;
+    int stage_timer_ = 120000;
+
+    int deaths_ = 0;
 
     std::vector<Train> trains_;
     std::vector<Person> people_;
@@ -46,5 +49,7 @@ class GameScreen : public Screen {
 
     void add_blood_spray(double x, double y, int n);
     void add_smoke(double x, double y, int n);
+
+    std::string time_left_string() const;
 };
 
