@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 6, 16, 16), map_("level.txt") {
+GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 3, 16, 16), map_("level.txt"), state_(State::Playing) {
   rand_.seed(Util::random_seed());
 }
 
@@ -11,77 +11,93 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   // handle too big time steps
   if (elapsed > 25) elapsed = 25;
 
-  stage_timer_ -= elapsed;
-  if (stage_timer_ < 0) stage_timer_ = 0;
+  if (state_ == State::Playing) {
+    stage_timer_ -= elapsed;
+    if (stage_timer_ < 0) stage_timer_ = 0;
 
-  const int count = map_.switch_count();
-  if (input.key_pressed(Input::Button::Down)) {
-    active_switch_ = (active_switch_ + 1) % count;
-    audio.play_sample("select.wav");
-  } else if (input.key_pressed(Input::Button::Up)) {
-    active_switch_ = (active_switch_ + count - 1) % count;
-    audio.play_sample("select.wav");
-  }
-
-  if (input.key_pressed(Input::Button::A)) {
-    map_.toggle_switch(active_switch_);
-    audio.play_sample("change.wav");
-  }
-
-  if (stage_timer_ > 0) {
-    train_timer_ -= elapsed;
-    if (train_timer_ < 0) {
-      spawn_train(audio);
-      std::uniform_int_distribution<int> train_dist(1500, 5000);
-      train_timer_ += train_dist(rand_);
+    if (input.key_pressed(Input::Button::Start)) {
+      state_ = State::Paused;
+      audio.play_sample("pause.wav");
+      return true;
     }
 
-    person_timer_ -= elapsed;
-    if (person_timer_ < 0) {
-      std::uniform_int_distribution<int> people_count_dist(1, 5);
-      spawn_people(people_count_dist(rand_));
-
-      std::uniform_int_distribution<int> people_timer_dist(3000, 6000);
-      person_timer_ += people_timer_dist(rand_);
+    const int count = map_.switch_count();
+    if (input.key_pressed(Input::Button::Down)) {
+      active_switch_ = (active_switch_ + 1) % count;
+      audio.play_sample("select.wav");
+    } else if (input.key_pressed(Input::Button::Up)) {
+      active_switch_ = (active_switch_ + count - 1) % count;
+      audio.play_sample("select.wav");
     }
 
-    if (people_.empty() && trains_.empty()) {
-      // TODO level complete
+    if (input.key_pressed(Input::Button::A)) {
+      map_.toggle_switch(active_switch_);
+      audio.play_sample("change.wav");
     }
-  }
 
-  for (auto& p : particles_) p.update(elapsed);
-  for (auto& p : people_) p.update(elapsed);
+    if (stage_timer_ > 0) {
+      train_timer_ -= elapsed;
+      if (train_timer_ < 0) {
+        spawn_train(audio);
+        std::uniform_int_distribution<int> train_dist(1500, 5000);
+        train_timer_ += train_dist(rand_);
+      }
 
-  for (auto& t : trains_) {
-    t.update(map_, elapsed);
+      person_timer_ -= elapsed;
+      if (person_timer_ < 0) {
+        std::uniform_int_distribution<int> people_count_dist(1, 5);
+        spawn_people(people_count_dist(rand_));
 
-    add_smoke(t.x() - 6.5, t.y() + 2, 10);
+        std::uniform_int_distribution<int> people_timer_dist(3000, 6000);
+        person_timer_ += people_timer_dist(rand_);
+      }
 
-    for (auto& p : people_) {
-      if (t.hit(p)) {
-        p.kill();
-        add_blood_spray(p.x() + 7, p.y() + 8, 200);
-        audio.play_sample("hit.wav");
-        ++deaths_;
+      if (people_.empty() && trains_.empty()) {
+        // TODO level complete
       }
     }
+
+    for (auto& p : particles_) p.update(elapsed);
+    for (auto& p : people_) p.update(elapsed);
+
+    for (auto& t : trains_) {
+      t.update(map_, elapsed);
+
+      add_smoke(t.x() - 6.5, t.y() + 2, 10);
+
+      for (auto& p : people_) {
+        if (t.hit(p)) {
+          p.kill();
+          add_blood_spray(p.x() + 7, p.y() + 8, 200);
+          audio.play_sample("hit.wav");
+          ++deaths_;
+        }
+      }
+    }
+
+    particles_.erase(std::remove_if(
+          particles_.begin(), particles_.end(),
+          [](const Particle& p){ return p.done(); }),
+        particles_.end());
+
+    people_.erase(std::remove_if(
+          people_.begin(), people_.end(),
+          [](const Person& p){ return p.gone(); }),
+        people_.end());
+
+    trains_.erase(std::remove_if(
+          trains_.begin(), trains_.end(),
+          [](const Train& t){ return t.gone(); }),
+        trains_.end());
+
+  } else if (state_ == State::Paused) {
+    if (input.key_pressed(Input::Button::Start)) {
+      state_ = State::Playing;
+      audio.play_sample("pause.wav");
+    }
+  } else if (state_ == State::Clear) {
+    // TODO handle stage clear
   }
-
-  particles_.erase(std::remove_if(
-        particles_.begin(), particles_.end(),
-        [](const Particle& p){ return p.done(); }),
-      particles_.end());
-
-  people_.erase(std::remove_if(
-        people_.begin(), people_.end(),
-        [](const Person& p){ return p.gone(); }),
-      people_.end());
-
-  trains_.erase(std::remove_if(
-        trains_.begin(), trains_.end(),
-        [](const Train& t){ return t.gone(); }),
-      trains_.end());
 
   return true;
 }
@@ -101,13 +117,16 @@ void GameScreen::draw(Graphics& graphics) const {
   for (const auto& p : people_) p.draw(graphics);
   for (const auto& t : trains_) {
     t.draw(graphics);
-
-    if (t.x() < 0) {
-      ui_.draw(graphics, 1, 0, t.y());
-    }
+    if (t.x() < 0) ui_.draw(graphics, 1, 0, t.y());
   }
 
   for (const auto& p : particles_) p.draw(graphics);
+
+  if (state_ == State::Paused) {
+    const Box b(10, 3);
+    b.draw(graphics, ui_);
+    text_.draw(graphics, "P A U S E D", 128, 112, Text::Alignment::Center);
+  }
 }
 
 Screen* GameScreen::next_screen() const {
@@ -153,3 +172,27 @@ std::string GameScreen::time_left_string() const {
   return std::to_string(m) + ":" + (s < 10 ? "0" : "") + std::to_string(s);
 }
 
+GameScreen::Box::Box(int w, int h) : width(w), height(h) {}
+
+void GameScreen::Box::draw(Graphics& graphics, const SpriteMap& ui) const {
+  const int sx = 128 - width * 8;
+  const int sy = 120 - height * 8;
+  const int ex = 112 + width * 8;
+  const int ey = 104 + height * 8;
+
+  for (int y = 1; y < height - 1; ++y) {
+    ui.draw(graphics, 6, sx, sy + 16 * y);
+    ui.draw(graphics, 8, ex, sy + 16 * y);
+  }
+
+  for (int x = 1; x < width - 1; ++x) {
+    ui.draw(graphics, 4, sx + 16 * x, sy);
+    for (int y = 1; y < height - 1; ++y) ui.draw(graphics, 7, sx + 16 * x, sy + 16 * y);
+    ui.draw(graphics, 10, sx + 16 * x, ey);
+  }
+
+  ui.draw(graphics, 3, sx, sy);
+  ui.draw(graphics, 5, ex, sy);
+  ui.draw(graphics, 9, sx, ey);
+  ui.draw(graphics, 11, ex, ey);
+}

@@ -27,9 +27,20 @@ class GameScreen : public Screen {
 
   private:
 
+    enum class State { Playing, Paused, Clear };
+
+    struct Box {
+      Box(int w, int h);
+
+      int width, height;
+      void draw(Graphics& graphics, const SpriteMap& ui) const;
+    };
+
     Text text_;
     SpriteMap ui_;
     Map map_;
+
+    State state_;
 
     int active_switch_ = 0;
     int train_timer_ = 5000;
@@ -52,4 +63,3 @@ class GameScreen : public Screen {
 
     std::string time_left_string() const;
 };
-
