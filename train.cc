@@ -12,9 +12,9 @@ Train::Train(int y) : sprites_("objects.png", 8, 16, 16) {
   const int cars = car_count(rand);
 
   std::uniform_int_distribution<int> car_type(1, 2);
-  cars_.emplace_back(-8, y, 0);
+  cars_.emplace_back(-kLeftOffset, y, 0);
   for (int i = 1; i < cars; ++i) {
-    cars_.emplace_back(-8 - i * 16, y, car_type(rand));
+    cars_.emplace_back(-kLeftOffset - i * 16, y, car_type(rand));
   }
 
   timer_ = 0;
@@ -55,6 +55,14 @@ bool Train::hit(const Person& person) const {
 
 bool Train::gone() const {
   return cars_[0].x > 320 + 16 * kMaxCars;
+}
+
+double Train::x() const {
+  return cars_[0].x;
+}
+
+double Train::y() const {
+  return cars_[0].y;
 }
 
 Train::TrainCar::TrainCar(double x, double y, int type) : x(x), y(y), dir(Direction::Forward), type(type) {}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include <vector>
 
 #include "graphics.h"
@@ -7,6 +8,7 @@
 #include "screen.h"
 #include "spritemap.h"
 #include "text.h"
+#include "util.h"
 
 #include "map.h"
 #include "train.h"
@@ -25,13 +27,17 @@ class GameScreen : public Screen {
   private:
 
     Text text_;
-    SpriteMap tracks_;
+    SpriteMap ui_;
     Map map_;
 
     int active_switch_ = 0;
+    int train_timer_ = 5000;
+    int person_timer_ = 500;
 
     std::vector<Train> trains_;
     std::vector<Person> people_;
+
+    std::mt19937 rand_;
 
     void spawn_train();
     void spawn_person();

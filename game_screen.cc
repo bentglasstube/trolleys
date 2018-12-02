@@ -2,7 +2,9 @@
 
 #include <algorithm>
 
-GameScreen::GameScreen() : text_("text.png"), tracks_("tracks.png", 6, 16, 16), map_("level.txt") {}
+GameScreen::GameScreen() : text_("text.png"), ui_("ui.png", 6, 16, 16), map_("level.txt") {
+  rand_.seed(Util::random_seed());
+}
 
 bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   // handle too big time steps
@@ -19,12 +21,11 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     map_.toggle_switch(active_switch_);
   }
 
-  if (input.key_pressed(Input::Button::B)) {
+  train_timer_ -= elapsed;
+  if (train_timer_ < 0) {
     spawn_train();
-  }
-
-  if (input.key_held(Input::Button::Start)) {
-    spawn_person();
+    std::uniform_int_distribution<int> train_dist(1500, 5000);
+    train_timer_ += train_dist(rand_);
   }
 
   for (auto& p : people_) p.update(elapsed);
@@ -58,10 +59,16 @@ void GameScreen::draw(Graphics& graphics) const {
 
   // TODO move selector to ui spritemap
   const auto& active = map_.get_switch(active_switch_);
-  tracks_.draw(graphics, 5, active.x(), active.y());
+  ui_.draw(graphics, 0, active.x(), active.y());
 
   for (const auto& p : people_) p.draw(graphics);
-  for (const auto& t : trains_) t.draw(graphics);
+  for (const auto& t : trains_) {
+    t.draw(graphics);
+
+    if (t.x() < 0) {
+      ui_.draw(graphics, 1, 0, t.y());
+    }
+  }
 }
 
 Screen* GameScreen::next_screen() const {

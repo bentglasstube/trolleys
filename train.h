@@ -18,10 +18,13 @@ class Train {
     void draw(Graphics& graphics) const;
     bool hit(const Person& person) const;
     bool gone() const;
+    double x() const;
+    double y() const;
 
   private:
 
     static constexpr int kMaxCars = 4;
+    static constexpr int kLeftOffset = 256;
 
     enum class Direction { Forward, Upward, Downward };
 
