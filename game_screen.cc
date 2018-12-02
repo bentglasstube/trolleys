@@ -15,6 +15,12 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     stage_timer_ -= elapsed;
     if (stage_timer_ < 0) stage_timer_ = 0;
 
+#ifndef NDEBUG
+    if (input.key_pressed(Input::Button::Select)) {
+      stage_timer_ -= 10000;
+    }
+#endif
+
     if (input.key_pressed(Input::Button::Start)) {
       state_ = State::Paused;
       audio.play_sample("pause.wav");
@@ -52,9 +58,6 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
         person_timer_ += people_timer_dist(rand_);
       }
 
-      if (people_.empty() && trains_.empty()) {
-        // TODO level complete
-      }
     }
 
     for (auto& p : particles_) p.update(elapsed);
@@ -90,13 +93,17 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
           [](const Train& t){ return t.gone(); }),
         trains_.end());
 
+    if (stage_timer_ == 0  && trains_.empty()) {
+      state_ = State::Clear;
+    }
+
   } else if (state_ == State::Paused) {
     if (input.key_pressed(Input::Button::Start)) {
       state_ = State::Playing;
       audio.play_sample("pause.wav");
     }
   } else if (state_ == State::Clear) {
-    // TODO handle stage clear
+    if (input.key_pressed(Input::Button::Start)) return false;
   }
 
   return true;
@@ -123,9 +130,23 @@ void GameScreen::draw(Graphics& graphics) const {
   for (const auto& p : particles_) p.draw(graphics);
 
   if (state_ == State::Paused) {
+
     const Box b(10, 3);
     b.draw(graphics, ui_);
     text_.draw(graphics, "P A U S E D", 128, 112, Text::Alignment::Center);
+
+  } else if (state_ == State::Clear) {
+
+    const Box b(12, 7);
+    b.draw(graphics, ui_);
+    text_.draw(graphics, "Stage Clear", 128, 72, Text::Alignment::Center);
+
+    text_.draw(graphics, "Killed Today: ", 48, 104);
+    text_.draw(graphics, std::to_string(deaths_), 208, 104, Text::Alignment::Right);
+
+    text_.draw(graphics, "Total Deaths: ", 48, 120);
+
+    text_.draw(graphics, "Press Start", 128, 152, Text::Alignment::Center);
   }
 }
 

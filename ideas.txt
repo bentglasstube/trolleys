@@ -7,3 +7,4 @@
 [ ] trains slow down without engine attached
 [ ] stats on what is killed
 [ ] multiple sidewalks
+[ ] bullet trains
