@@ -1,5 +1,8 @@
-[ ] sound effects
+[x] sound effects
 [ ] music
 [ ] weather effects
 [ ] danny devito "that shit was terrible"
 [ ] have people wait if a train is passing
+[ ] trains slow down without engine attached
+[ ] stats on what is killed
+[ ] multiple sidewalks

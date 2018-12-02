@@ -44,7 +44,7 @@ class GameScreen : public Screen {
 
     std::mt19937 rand_;
 
-    void spawn_train();
+    void spawn_train(Audio& audio);
     void spawn_people(int count);
 
     void add_blood_spray(double x, double y, int n);

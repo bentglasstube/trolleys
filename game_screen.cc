@@ -31,7 +31,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   if (stage_timer_ > 0) {
     train_timer_ -= elapsed;
     if (train_timer_ < 0) {
-      spawn_train();
+      spawn_train(audio);
       std::uniform_int_distribution<int> train_dist(1500, 5000);
       train_timer_ += train_dist(rand_);
     }
@@ -62,6 +62,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       if (t.hit(p)) {
         p.kill();
         add_blood_spray(p.x() + 7, p.y() + 8, 200);
+        audio.play_sample("hit.wav");
         ++deaths_;
       }
     }
@@ -113,8 +114,9 @@ Screen* GameScreen::next_screen() const {
   return nullptr;
 }
 
-void GameScreen::spawn_train() {
+void GameScreen::spawn_train(Audio& audio) {
   trains_.emplace_back(map_.random_track());
+  audio.play_sample("alert.wav");
 }
 
 void GameScreen::spawn_people(int count) {
