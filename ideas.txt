@@ -5,7 +5,7 @@
 
 [x] sfx on title/achievement screens
 [x] move day text to top
-[ ] fix person of last day text
+[x] fix person of last day text
 [ ] achievement sound
 
 [ ] weather effects

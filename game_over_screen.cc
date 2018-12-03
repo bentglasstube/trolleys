@@ -45,13 +45,25 @@ Screen* GameOverScreen::next_screen() const {
 std::string GameOverScreen::current_text() const {
   switch (stage_) {
     case 1:
-      return "Over the course of 5 days\nyou managed to kill " + std::to_string(death_toll_) + "\nliving things.";
+      return "Over the course of five days,\n"
+             "I have managed to kill " + std::to_string(death_toll_) + "\n"
+             "living things.";
     case 2:
-      return "If I am forced against my\nwill into a situation where\npeople will die, and I have no\nability to stop it, how is my\nchoice a 'moral' choice...\n";
+      return "If I am forced against my\n"
+             "will into a situation where\n"
+             "people will die, and I have no\n"
+             "ability to stop it, how is my\n"
+             "choice a 'moral' choice...\n";
     case 3:
-      return "as opposed to a horror show\nI've just been thrust into, in\nwhich I have no meaningful\nagency?";
+      return "as opposed to a horror show\n"
+             "I've just been thrust into, in\n"
+             "which I have no\n"
+             "meaningful agency?";
     case 4:
-      return "That                       \nshit                       \nwas                        \nterrible.";
+      return "That                       \n"
+             "shit                       \n"
+             "was                        \n"
+             "terrible.";
     default:
       return "";
   }
