@@ -22,6 +22,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     alerts_.emplace_back(GameState::Name(a));
     gs_.show(a);
     audio.play_sample("achieve.wav");
+    last_achieve_ = a;
   }
 
   if (!alerts_.empty()) {
@@ -172,6 +173,11 @@ void GameScreen::draw(Graphics& graphics) const {
     const Box b(10, 3);
     b.draw(graphics, ui_);
     text_.draw(graphics, "P A U S E D", 128, 112, Text::Alignment::Center);
+
+    if (last_achieve_ != GameState::Achievement::Nothing) {
+      text_.draw(graphics, GameState::Name(last_achieve_), 128, 184, Text::Alignment::Center);
+      text_.draw(graphics, GameState::Description(last_achieve_), 32, 208);
+    }
 
   } else if (state_ == State::Clear) {
 

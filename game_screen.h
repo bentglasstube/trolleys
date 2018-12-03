@@ -64,6 +64,8 @@ class GameScreen : public Screen {
 
     int level_ = 1;
 
+    GameState::Achievement last_achieve_ = GameState::Achievement::Nothing;
+
     std::vector<Train> trains_;
     std::vector<Person> people_;
     std::vector<Particle> particles_;
