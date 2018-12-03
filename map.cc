@@ -37,9 +37,7 @@ void Map::load(const std::string& file) {
 }
 
 void Map::toggle_switch(size_t n) {
-  if (n < 0) return;
-  if (n >= switches_.size()) return;
-  switches_[n].toggle();
+  if (n < switches_.size()) switches_[n].toggle();
 }
 
 void Map::draw(Graphics& graphics) const {

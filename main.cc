@@ -12,7 +12,8 @@ int main(int, char**) {
   config.graphics.fullscreen = true;
 
   Game game(config);
-  game.loop(new TitleScreen((GameState){}));
+  GameState state;
+  game.loop(new TitleScreen(state));
 
   return 0;
 }

@@ -1,4 +1,6 @@
 bazel-*
-ld42-*.zip
-ld42-*.tgz
+trolleys-*.zip
+trolleys-*.tgz
 *.app
+gam
+output

@@ -149,5 +149,5 @@ bool Train::TrainCar::hit(const Person& person) const {
 std::pair<int, int> Train::TrainCar::tile_coords() const {
   const int tx = (int)((x - 16) / 16) * 16;
   const int ty = (int)(y / 16) * 16;
-  return std::move(std::make_pair(tx, ty));
+  return std::make_pair(tx, ty);
 }

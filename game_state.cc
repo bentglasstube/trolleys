@@ -1,5 +1,7 @@
 #include "game_state.h"
 
+#include <string>
+
 GameState::GameState() {}
 
 void GameState::achieve(Achievement a) {
