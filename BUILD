@@ -53,6 +53,7 @@ cc_library(
     name = "game_state",
     hdrs = ["game_state.h"],
     srcs = ["game_state.cc"],
+    deps = ["@libgam//:util"],
 )
 
 cc_library(

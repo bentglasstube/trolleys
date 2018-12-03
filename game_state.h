@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "util.h"
+
 class GameState {
   public:
 
@@ -29,5 +31,5 @@ class GameState {
 
     enum class Status { None, Gotten, Shown };
 
-    std::unordered_map<Achievement, Status>  status_;
+    std::unordered_map<Achievement, Status, Util::CastHash<Achievement>>  status_;
 };
