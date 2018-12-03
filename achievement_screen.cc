@@ -5,8 +5,14 @@
 AchievementScreen::AchievementScreen(GameState state) : gs_(state), text_("text.png"), backdrop_("achievements.png"), select_(0) {}
 
 bool AchievementScreen::update(const Input& input, Audio& audio, unsigned int) {
-  if (input.key_pressed(Input::Button::Up)) --select_;
-  if (input.key_pressed(Input::Button::Down)) ++select_;
+  if (input.key_pressed(Input::Button::Up)) {
+    audio.play_sample("select.wav");
+    --select_;
+  }
+  if (input.key_pressed(Input::Button::Down)) {
+    audio.play_sample("select.wav");
+    ++select_;
+  }
 
   select_ = (select_ + kAchievements) % kAchievements;
 

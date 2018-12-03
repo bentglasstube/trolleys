@@ -3,6 +3,11 @@
 [x] multiple levels
 [x] danny devito "that shit was terrible"
 
+[ ] sfx on title/achievement screens
+[ ] move day text to top
+[ ] fix person of last day text
+[ ] achievement sound
+
 [ ] weather effects
 [ ] have people wait if a train is passing
 [ ] trains slow down without engine attached

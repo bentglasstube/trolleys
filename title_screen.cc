@@ -8,13 +8,21 @@ TitleScreen::TitleScreen(GameState state) : gs_(state), text_("text.png"), backd
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int) {
   if (!audio.music_playing()) audio.play_music("dour.ogg");
 
-  if (input.key_pressed(Input::Button::Up)) --choice_;
-  if (input.key_pressed(Input::Button::Down)) ++choice_;
+  if (input.key_pressed(Input::Button::Up)) {
+    --choice_;
+    audio.play_sample("select.wav");
+  }
+  if (input.key_pressed(Input::Button::Down)) {
+    ++choice_;
+    audio.play_sample("select.wav");
+  }
 
   choice_ = (choice_ + kChoices.size()) % kChoices.size();
 
-  if (input.key_pressed(Input::Button::A)) return false;
-  if (input.key_pressed(Input::Button::Start)) return false;
+  if (input.key_pressed(Input::Button::A) || input.key_pressed(Input::Button::Start)) {
+    audio.play_sample("change.wav");
+    return false;
+  }
 
   return true;
 }
