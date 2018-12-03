@@ -6,9 +6,11 @@
 [x] sfx on title/achievement screens
 [x] move day text to top
 [x] fix person of last day text
-[ ] achievement sound
+[x] achievement sound
+[ ] train miss achievement
 
 [ ] weather effects
+
 [ ] have people wait if a train is passing
 [ ] trains slow down without engine attached
 [ ] stats on what is killed

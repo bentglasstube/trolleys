@@ -21,6 +21,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   if (a != GameState::Achievement::Nothing) {
     alerts_.emplace_back(GameState::Name(a));
     gs_.show(a);
+    audio.play_sample("achieve.wav");
   }
 
   if (!alerts_.empty()) {
