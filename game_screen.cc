@@ -155,7 +155,7 @@ void GameScreen::draw(Graphics& graphics) const {
   ui_.draw(graphics, 2, 0, 0);
   text_.draw(graphics, std::to_string(current_deaths_), 16, 0);
   text_.draw(graphics, time_left_string(), 256, 0, Text::Alignment::Right);
-  text_.draw(graphics, "Day " + std::to_string(level_), 128, 224, Text::Alignment::Center);
+  text_.draw(graphics, "Day " + std::to_string(level_), 128, 0, Text::Alignment::Center);
 
   for (const auto& p : people_) p.draw(graphics);
   for (const auto& t : trains_) {

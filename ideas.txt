@@ -3,8 +3,8 @@
 [x] multiple levels
 [x] danny devito "that shit was terrible"
 
-[ ] sfx on title/achievement screens
-[ ] move day text to top
+[x] sfx on title/achievement screens
+[x] move day text to top
 [ ] fix person of last day text
 [ ] achievement sound
 
