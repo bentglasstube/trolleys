@@ -62,6 +62,7 @@ class GameScreen : public Screen {
 
     bool dog_killed_ = false;
     int raininess_ = 0;
+    int lightning_timer_ = 0;
 
     int level_ = 1;
 

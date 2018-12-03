@@ -31,10 +31,19 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   }
 
   if (state_ == State::Playing) {
-    add_raindrop(raininess_ / 500);
     raininess_ += elapsed;
     stage_timer_ -= elapsed;
+
     if (stage_timer_ < 0) stage_timer_ = 0;
+    add_raindrop(raininess_ / 500);
+    if (raininess_ > 100000) {
+      lightning_timer_ -= elapsed;
+      if (lightning_timer_ < 0) {
+        std::uniform_int_distribution<int> lit_dist(8000, 12000);
+        lightning_timer_ = lit_dist(rand_);
+        audio.play_sample("thunder.wav");
+      }
+    }
 
 #ifndef NDEBUG
     if (input.key_pressed(Input::Button::Select)) {
@@ -165,6 +174,11 @@ void GameScreen::draw(Graphics& graphics) const {
   SDL_Rect r = { 0, 0, 256, 240 };
   const int gloom = 25 * (level_ - 1);
   graphics.draw_rect(&r, 0x00000000 | gloom, true);
+
+  if (lightning_timer_ > 0 && lightning_timer_ < 510) {
+    const int brightness = 250 - std::abs(250 - lightning_timer_);
+    graphics.draw_rect(&r, 0xffffff00 | brightness, true);
+  }
 
   const auto& active = map_.get_switch(active_switch_);
   ui_.draw(graphics, 0, active.x(), active.y());
