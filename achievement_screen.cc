@@ -26,17 +26,18 @@ bool AchievementScreen::update(const Input& input, Audio& audio, unsigned int) {
 void AchievementScreen::draw(Graphics& graphics) const {
   backdrop_.draw(graphics);
 
-  draw_achievement(graphics, GameState::Achievement::Deathless, 48, 32);
-  draw_achievement(graphics, GameState::Achievement::Dogless,   48, 48);
-  draw_achievement(graphics, GameState::Achievement::Split,     48, 64);
-  draw_achievement(graphics, GameState::Achievement::Rejoin,    48, 80);
-  draw_achievement(graphics, GameState::Achievement::ThreeWay,  48, 94);
+  draw_achievement(graphics, GameState::Achievement::Missed,    48, 32);
+  draw_achievement(graphics, GameState::Achievement::Deathless, 48, 48);
+  draw_achievement(graphics, GameState::Achievement::Dogless,   48, 64);
+  draw_achievement(graphics, GameState::Achievement::Split,     48, 80);
+  draw_achievement(graphics, GameState::Achievement::Rejoin,    48, 96);
+  draw_achievement(graphics, GameState::Achievement::ThreeWay,  48, 112);
 
   text_.draw(graphics, ">", 32, 32 + select_ * 16);
 
   const GameState::Achievement a = static_cast<GameState::Achievement>(select_ + 1);
   if (gs_.known(a)) {
-    text_.draw(graphics, GameState::Description(a), 32, 128);
+    text_.draw(graphics, GameState::Description(a), 32, 144);
   }
 }
 

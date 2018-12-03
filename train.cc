@@ -39,8 +39,8 @@ void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
     }
   }
 
-  if (split_) {
-    if (gone()) {
+  if (gone()) {
+    if (split_) {
       std::unordered_set<int> ys;
       for (const auto& c : cars_) {
         ys.insert((int)c.y);
@@ -49,6 +49,10 @@ void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
       if (ys.size() > 2) gs.achieve(GameState::Achievement::ThreeWay);
     }
 
+    if (!tainted_) gs.achieve(GameState::Achievement::Missed);
+  }
+
+  if (split_) {
     const int ey = (int)cars_[0].y;
     for (size_t  i = 1; i < cars_.size(); ++i) {
       if (ey != (int)cars_[i].y) return;
@@ -56,6 +60,10 @@ void Train::update(const Map& map, unsigned int elapsed, GameState& gs) {
     gs.achieve(GameState::Achievement::Rejoin);
     split_ = false;
   }
+}
+
+void Train::taint() {
+  tainted_ = true;
 }
 
 void Train::draw(Graphics& graphics) const {

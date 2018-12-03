@@ -7,6 +7,7 @@ class GameState {
 
     enum class Achievement {
       Nothing,
+      Missed,
       Deathless,
       Dogless,
       Split,

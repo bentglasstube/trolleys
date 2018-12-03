@@ -92,6 +92,7 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 
       for (auto& p : people_) {
         if (t.hit(p)) {
+          t.taint();
           p.kill();
           add_blood_spray(p.x() + 7, p.y() + 8, 200);
           audio.play_sample("hit.wav");

@@ -19,7 +19,7 @@ class AchievementScreen : public Screen {
 
   private:
 
-    static constexpr int kAchievements = 5;
+    static constexpr int kAchievements = 6;
 
     GameState gs_;
     Text text_;

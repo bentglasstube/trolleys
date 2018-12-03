@@ -15,6 +15,7 @@ class Train {
     Train(int y);
 
     void update(const Map& map, unsigned int elapsed, GameState& gs);
+    void taint();
 
     void draw(Graphics& graphics) const;
     bool hit(const Person& person) const;
@@ -49,6 +50,6 @@ class Train {
     std::vector<TrainCar> cars_;
     double speed_;
     bool split_ = false;
-
+    bool tainted_ = false;
 };
 
