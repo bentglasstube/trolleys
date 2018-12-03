@@ -56,8 +56,8 @@ std::string GameOverScreen::current_text() const {
              "choice a 'moral' choice...\n";
     case 3:
       return "as opposed to a horror show\n"
-             "I've just been thrust into, in\n"
-             "which I have no\n"
+             "I've just been thrust into,\n"
+             "in which I have no\n"
              "meaningful agency?";
     case 4:
       return "That                       \n"
