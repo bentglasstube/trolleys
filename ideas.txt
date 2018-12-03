@@ -10,6 +10,12 @@
 [x] train miss achievement
 
 [ ] weather effects
+  [x] raindrops
+  [x] gloom
+  [ ] lightning
+  [ ] thunder
+
+[x] show last achievement desc on pause
 
 [ ] have people wait if a train is passing
 [ ] trains slow down without engine attached

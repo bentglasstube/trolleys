@@ -61,6 +61,7 @@ class GameScreen : public Screen {
     int total_deaths_ = 0;
 
     bool dog_killed_ = false;
+    int raininess_ = 0;
 
     int level_ = 1;
 
@@ -80,6 +81,7 @@ class GameScreen : public Screen {
 
     void add_blood_spray(double x, double y, int n);
     void add_smoke(double x, double y, int n);
+    void add_raindrop(int n);
 
     std::string time_left_string() const;
 };

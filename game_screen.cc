@@ -31,12 +31,15 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   }
 
   if (state_ == State::Playing) {
+    add_raindrop(raininess_ / 500);
+    raininess_ += elapsed;
     stage_timer_ -= elapsed;
     if (stage_timer_ < 0) stage_timer_ = 0;
 
 #ifndef NDEBUG
     if (input.key_pressed(Input::Button::Select)) {
       stage_timer_ -= 10000;
+      raininess_ += 10000;
     }
 
     if (input.key_pressed(Input::Button::B)) {
@@ -151,15 +154,6 @@ bool GameScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 void GameScreen::draw(Graphics& graphics) const {
   map_.draw(graphics);
 
-  // TODO move selector to ui spritemap
-  const auto& active = map_.get_switch(active_switch_);
-  ui_.draw(graphics, 0, active.x(), active.y());
-
-  ui_.draw(graphics, 2, 0, 0);
-  text_.draw(graphics, std::to_string(current_deaths_), 16, 0);
-  text_.draw(graphics, time_left_string(), 256, 0, Text::Alignment::Right);
-  text_.draw(graphics, "Day " + std::to_string(level_), 128, 0, Text::Alignment::Center);
-
   for (const auto& p : people_) p.draw(graphics);
   for (const auto& t : trains_) {
     t.draw(graphics);
@@ -167,6 +161,14 @@ void GameScreen::draw(Graphics& graphics) const {
   }
 
   for (const auto& p : particles_) p.draw(graphics);
+
+  const auto& active = map_.get_switch(active_switch_);
+  ui_.draw(graphics, 0, active.x(), active.y());
+
+  ui_.draw(graphics, 2, 0, 0);
+  text_.draw(graphics, std::to_string(current_deaths_), 16, 0);
+  text_.draw(graphics, time_left_string(), 256, 0, Text::Alignment::Right);
+  text_.draw(graphics, "Day " + std::to_string(level_), 128, 0, Text::Alignment::Center);
 
   if (state_ == State::Paused) {
 
@@ -248,6 +250,15 @@ void GameScreen::add_smoke(double x, double y, int n) {
     const int c = color_dist(rand_);
     const unsigned long color = c << 24 | c << 16 | c << 8 | 0xff;
     particles_.emplace_back(x + pos_dist(rand_), y + pos_dist(rand_), 0, -vel_dist(rand_), 0.0f, color, 800);
+  }
+}
+
+void GameScreen::add_raindrop(int n) {
+  std::uniform_int_distribution<int> xd(0, 288);
+  std::uniform_int_distribution<int> yd(-32, 240);
+
+  for (int i = 0; i < n; ++i) {
+    particles_.emplace_back(xd(rand_), yd(rand_), -0.03, 0.3, 0, 0x8888ffff, 500);
   }
 }
 
