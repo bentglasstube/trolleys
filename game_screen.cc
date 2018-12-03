@@ -162,6 +162,10 @@ void GameScreen::draw(Graphics& graphics) const {
 
   for (const auto& p : particles_) p.draw(graphics);
 
+  SDL_Rect r = { 0, 0, 256, 240 };
+  const int gloom = 25 * (level_ - 1);
+  graphics.draw_rect(&r, 0x00000000 | gloom, true);
+
   const auto& active = map_.get_switch(active_switch_);
   ui_.draw(graphics, 0, active.x(), active.y());
 
