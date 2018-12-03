@@ -9,11 +9,11 @@
 [x] achievement sound
 [x] train miss achievement
 
-[ ] weather effects
+[x] weather effects
   [x] raindrops
   [x] gloom
-  [ ] lightning
-  [ ] thunder
+  [x] lightning
+  [x] thunder
 
 [x] show last achievement desc on pause
 
