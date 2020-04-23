@@ -1,0 +1,9 @@
+[Desktop Entry]
+
+Type=Application
+Version=1.0
+Name=Trolleys
+Terminal=false
+Icon=icon
+Exec=trolleys
+Categories=Game;

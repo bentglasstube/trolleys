@@ -1,6 +1,12 @@
 bazel-*
-trolleys-*.zip
-trolleys-*.tgz
-*.app
-gam
-output
+/*.zip
+/*.tgz
+/*.app
+/*.AppImage
+/*.AppDir
+/*.data
+/*.html
+/*.js
+/*.wasm
+/*-web-*/
+*output/
