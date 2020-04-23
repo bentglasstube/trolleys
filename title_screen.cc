@@ -6,8 +6,6 @@
 TitleScreen::TitleScreen(GameState state) : gs_(state), text_("text.png"), backdrop_("title.png"), choice_(0) {}
 
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int) {
-  if (!audio.music_playing()) audio.play_music("dour.ogg");
-
   if (input.key_pressed(Input::Button::Up)) {
     --choice_;
     audio.play_sample("select.wav");

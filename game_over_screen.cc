@@ -5,8 +5,6 @@
 GameOverScreen::GameOverScreen(GameState state, int death_toll) : gs_(state), text_("text.png"), backdrop_("gameover.png"), death_toll_(death_toll), timer_(0), letters_(0), stage_(1) {}
 
 bool GameOverScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
-  if (!audio.music_playing()) audio.play_music("gameover.ogg");
-
   timer_ += elapsed;
 
   const std::string text = current_text();
@@ -25,12 +23,7 @@ bool GameOverScreen::update(const Input& input, Audio& audio, unsigned int elaps
     timer_ = 0;
   }
 
-  if (text == "") {
-    audio.stop_music();
-    return false;
-  }
-
-  return true;
+  return text != "";
 }
 
 void GameOverScreen::draw(Graphics& graphics) const {
