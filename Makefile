@@ -31,8 +31,8 @@ ifeq ($(UNAME), Linux)
 	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
 endif
 ifeq ($(UNAME), Darwin)
-	PACKAGE=$(NAME)-osx-$(VERSION).tgz
-	LDLIBS=-framework SDL2 -framework SDL2_mixer -framework SDL2_image -rpath @executable_path/../Frameworks
+	PACKAGE=$(NAME)-macos-$(VERSION).dmg
+	LDLIBS=-framework SDL2 -framework SDL2_mixer -framework SDL2_image -rpath @executable_path/../Frameworks -F /Library/Frameworks/
 	CFLAGS+=-mmacosx-version-min=10.9
 endif
 
@@ -66,15 +66,17 @@ web: wasm $(NAME)-$(VERSION).js $(NAME)-$(VERSION).data
 	cp $(NAME)-$(VERSION).data $(NAME)-web-$(VERSION)
 	cp $(NAME)-$(VERSION).html $(NAME)-web-$(VERSION)/index.html
 
-$(NAME)-osx-$(VERSION).tgz: $(NAME).app
+$(NAME)-macos-$(VERSION).dmg: $(NAME).app
 	mkdir $(NAME)
 	cp -r $(NAME).app $(NAME)/.
-	tar zcf $@ $(NAME)
+	hdiutil create tmp.dmg -ov -volname $(NAME) -fs HFS+ -srcfolder $(NAME)
+	hdiutil convert tmp.dmg -format UDZO -o $@
 	rm -rf $(NAME)
+	rm tmp.dmg
 
 $(NAME)-windows-$(VERSION).zip: $(EXECUTABLE) $(CONTENT)
 	mkdir -p $(NAME)/content
-	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`.exe
+	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`
 	cp $(CONTENT) $(NAME)/content/.
 	zip -r $@ $(NAME)
 	rm -rf $(NAME)
@@ -105,13 +107,13 @@ $(NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(NAME
 	cp /usr/lib/libSDL2{,_image,_mixer}-2.0.so.0 $@/usr/lib/.
 
 $(NAME)-linux-$(VERSION).AppImage: $(NAME)-linux-$(VERSION).AppDir
-	ARCH=x86_64 appimagetool $<
+	ARCH=x86_64 appimagetool $< $@
 
 clean:
 	rm -rf $(BUILDDIR)
 
 distclean: clean
-	rm -rf *.app *.tgz *.zip
+	rm -rf *.app *.dmg *.zip
 	rm -rf *.AppDir *.AppImage
 	rm -rf *.html *.js *.data *.wasm
 	rm -rf *-web-*/ *output/
